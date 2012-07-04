@@ -1,0 +1,16 @@
+$def with (command, argument)
+<html>
+	<head>
+		$if command:
+			$if argument:
+				<title>Command $command with arg: $argument sent succesfully</title>
+			$else:
+				<title>Command $command sent succesfully</title>
+		$else:
+			<title>PyAquos</title>
+	</head>
+	<body>
+		<h1>PyAquos Web Control</h1>
+		<h3><a href=?command=power+argument=on>Power On</a></h3>
+	</body>
+</html>
