@@ -15,6 +15,16 @@ class controller:
 		self.tty = serial.Serial(ttyname, 9600)
 		self.ok = True
 
+	def power_state(self):
+		"""
+		Power cycle the TV.
+		@return:		A boolean set to True if the TV is currently powered on.
+		"""
+		if self.query_state('POWR?   \r\n') == '1':
+			return True
+		else:
+			return False
+
 	def power(self, state):
 		"""
 		Power cycle the TV.
@@ -71,6 +81,17 @@ class controller:
 			return self.command('IAVD%1d   \r\n' % (number))
 		else:
 			raise ValueError
+
+	def query_state(self, commandstring):
+		"""
+		Internal method for checking the state of some TV parameter.
+		@type commandstring:	string	
+		@param commandstring:	The command to be passed to the TV over RS-232.
+		@return:				The returned value.
+		"""
+		self.tty.write(commandstring)
+		response = self.tty.readline()
+		return response[:-2]
 
 	def sendcommand(self, commandstring):
 		"""
