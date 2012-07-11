@@ -33,9 +33,9 @@ class controller:
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if state:
-			return self.sendcommand('POWR1   \r\n')
+			return self.send_command('POWR1   \r\n')
 		else:
-			return self.sendcommand('POWR0   \r\n')
+			return self.send_command('POWR0   \r\n')
 
 	def volume(self, level):
 		"""
@@ -45,7 +45,7 @@ class controller:
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if level < 100 and level > 0:#The volume can range from 1 to 99
-			return self.sendcommand('VOLM%02d  \r\n' % (level))
+			return self.send_command('VOLM%02d  \r\n' % (level))
 		else:
 			raise ValueError
 
@@ -57,9 +57,9 @@ class controller:
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if state:
-			return self.sendcommand('MUTE1   \r\n')
+			return self.send_command('MUTE1   \r\n')
 		else:
-			return self.sendcommand('MUTE2   \r\n')
+			return self.send_command('MUTE2   \r\n')
 
 	def input(self, number):
 		"""
@@ -78,7 +78,7 @@ class controller:
 			#INPUT6: COMP2 Bottom Rear Component
 			#INPUT7: AV Rear Composite
 			#INPUT8: PC IN VGA PC input
-			return self.sendcommand('IAVD%1d   \r\n' % (number))
+			return self.send_command('IAVD%1d   \r\n' % (number))
 		else:
 			raise ValueError
 
@@ -93,7 +93,7 @@ class controller:
 		response = self.tty.readline()
 		return response[:-2]
 
-	def sendcommand(self, commandstring):
+	def send_command(self, commandstring):
 		"""
 		Internal method for sending the commands and checking the return code.
 		@type commandstring:	string	
