@@ -45,7 +45,7 @@ class controller:
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if level < 100 and level > 0:#The volume can range from 1 to 99
-			return self.command('VOLM%02d  \r\n' % (level))
+			return self.sendcommand('VOLM%02d  \r\n' % (level))
 		else:
 			raise ValueError
 
@@ -57,9 +57,9 @@ class controller:
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if state:
-			return self.command('MUTE1   \r\n')
+			return self.sendcommand('MUTE1   \r\n')
 		else:
-			return self.command('MUTE2   \r\n')
+			return self.sendcommand('MUTE2   \r\n')
 
 	def input(self, number):
 		"""
@@ -78,7 +78,7 @@ class controller:
 			#INPUT6: COMP2 Bottom Rear Component
 			#INPUT7: AV Rear Composite
 			#INPUT8: PC IN VGA PC input
-			return self.command('IAVD%1d   \r\n' % (number))
+			return self.sendcommand('IAVD%1d   \r\n' % (number))
 		else:
 			raise ValueError
 
