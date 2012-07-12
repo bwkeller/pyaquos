@@ -15,12 +15,24 @@ class controller:
 		self.tty = serial.Serial(ttyname, 9600)
 		self.ok = True
 
-	def power_state(self):
+	def lock_power(self, state):
+		"""
+		Enable/disable the use of the power() command.
+		@type state:	bool
+		@param state:	True if the power() command is to be disabled.
+		@return:		A boolean set to True if the command ran succesfully.
+		"""
+		if state:
+			return self.send_command('RSPW0   \r\n')
+		else:
+			return self.send_command('POWR1   \r\n')
+
+	def lock_state(self):
 		"""
 		Power cycle the TV.
-		@return:		A boolean set to True if the TV is currently powered on.
+		@return:		Boolean set to True if the power() command is disabled.
 		"""
-		if self.query_state('POWR?   \r\n') == '1':
+		if self.query_state('RSPW?   \r\n') == '1':
 			return True
 		else:
 			return False
@@ -37,6 +49,16 @@ class controller:
 		else:
 			return self.send_command('POWR0   \r\n')
 
+	def power_state(self):
+		"""
+		Power cycle the TV.
+		@return:		A boolean set to True if the TV is currently powered on.
+		"""
+		if self.query_state('POWR?   \r\n') == '1':
+			return True
+		else:
+			return False
+
 	def volume(self, level):
 		"""
 		Change the volume on the TV.
@@ -45,9 +67,37 @@ class controller:
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if level < 100 and level > 0:#The volume can range from 1 to 99
-			return self.send_command('VOLM%02d  \r\n' % (level))
+			return self.send_command('VOLM%02d  \r\n' % level)
 		else:
-			raise ValueError
+			raise ValueError('Volume must be between 1 and 99')
+
+	def screen_position(self, horizontal, vertical, clock, phase):
+		"""
+		Change the VGA screen position, clock, and phase (this may be dangerous)
+		I honestly don't know what clock and phase really do.
+		@type horizontal:	int
+		@param horizontal:	Horizontal offset (0-100)
+		@type vertical:		int
+		@param vertical:	Vertical offset (0-100)
+		@type clock:		int
+		@param clock:		Clock frequency (0-180)
+		@type phase:		int
+		@param phase:		Phase offset (0-40)
+		@return:		A boolean set to True if the command ran succesfully.
+		"""
+		if horizontal < 0 or horizontal > 100:
+			raise ValueError('Horizontal offset must be between 0 and 100')
+		if vertical < 0 or vertical > 100:
+			raise ValueError('Vertical offset must be between 0 and 100')
+		if clock < 0 or clock > 180:
+			raise ValueError('Clock Frequency must be between 0 and 180')
+		if phase < 0 or phase > 40:
+			raise ValueError('Phase offset must be between 0 and 40')
+		hreturn = self.send_command('HPOS%03d \r\n' % horizontal)
+		vreturn = self.send_command('VPOS%03d \r\n' % vertical)
+		clckreturn = self.send_command('CLCK%03d \r\n' % clock)
+		phsreturn = self.send_command('PHSE%03d \r\n' % phase)
+		return hreturn and vreturn and clckreturn and phase
 
 	def mute(self, state):
 		"""
@@ -61,7 +111,22 @@ class controller:
 		else:
 			return self.send_command('MUTE2   \r\n')
 
-	def input(self, number):
+	def input_toggle(self):
+		"""
+		Toggle your way through the inputs.  This moves down through the 
+		inputs, and loops back to INPUT1 after being called on INPUT8.
+		@return:		A boolean set to True if the command ran succesfully.
+		"""
+		return self.send_command('ITGD1   \r\n')
+
+	def input_tv(self):
+		"""
+		Switch to the TV tuner.
+		@return:		A boolean set to True if the command ran succesfully.
+		"""
+		return self.send_command('ITVD0   \r\n')
+
+	def input_num(self, number):
 		"""
 		Change the A/V Source for the TV
 		@type number:	int
@@ -80,7 +145,7 @@ class controller:
 			#INPUT8: PC IN VGA PC input
 			return self.send_command('IAVD%1d   \r\n' % (number))
 		else:
-			raise ValueError
+			raise ValueError('Input must be between 1 and 8')
 
 	def query_state(self, commandstring):
 		"""
