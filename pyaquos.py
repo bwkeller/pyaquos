@@ -241,6 +241,28 @@ class controller:
 		"""
 		return int(self.query_state('WIDE?   \r\n'))
 
+	def surround(self, state):
+		"""
+		Turn on/off the surround sound.
+		@type state:	bool
+		@param state:	The surround state: True is on, False is off.
+		@return:		A boolean set to True if the command ran succesfully.
+		"""
+		if state:
+			return self.send_command('ACSU2   \r\n')
+		else:
+			return self.send_command('ACSU1   \r\n')
+
+	def query_surround(self):
+		"""
+		Return the current surround sound setting.
+		@return:		A boolean set to True if surround sound is set to ON.
+		"""
+		if self.query_state('ACSU?   \r\n') == '2':
+			return True
+		else:
+			return False
+	
 	def send_command(self, commandstring):
 		"""
 		Internal method for sending the commands and checking the return code.
