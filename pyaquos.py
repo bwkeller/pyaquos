@@ -106,6 +106,18 @@ class controller:
 		phsreturn = self.send_command('PHSE%03d \r\n' % phase)
 		return hreturn and vreturn and clckreturn and phase
 
+    def screen_state(self):
+        """
+        Return the current VGA screen settings.
+        @return:    (int, int, int, int) of the horizontal offset, vertical 
+        offset, clock frequency and phase.
+        """
+        horizontal = int(self.query_state('HPOS??? \r\n'))
+        vertical = int(self.query_state('VPOS??? \r\n'))
+        clock = int(self.query_state('CLCK??? \r\n'))
+        phase = int(self.query_state('PHSE??? \r\n'))
+        return (horizontal, vertical, clock, phase)
+
 	def mute(self, state):
 		"""
 		Mute the TV.
