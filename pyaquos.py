@@ -159,7 +159,7 @@ class controller:
 		"""
 		Change the A/V Source for the TV
 		@type number:	int
-		@param number:	The input number for the TV.
+		@param number:	The input number for the TV. (See below comments)
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if number < 9 and number > 0:#There are 8 inputs
@@ -173,7 +173,7 @@ class controller:
 			#INPUT6: COMP2 Bottom Rear Component
 			#INPUT7: AV Rear Composite
 			#INPUT8: PC IN VGA PC input
-			return self.send_command('IAVD%1d   \r\n' % (number))
+			return self.send_command('IAVD%1d   \r\n' % number)
 		else:
 			raise ValueError('Input must be between 1 and 8')
 
@@ -184,16 +184,62 @@ class controller:
         """
         return int(self.query_state('IAVD?   \r\n'))
 
-	def query_state(self, commandstring):
+	def av_mode(self, modenum):
 		"""
-		Internal method for checking the state of some TV parameter.
-		@type commandstring:	string	
-		@param commandstring:	The command to be passed to the TV over RS-232.
-		@return:				The returned value.
+		Change the AV mode (I believe this changes up the contrast, brightness,
+		and gamma, possibly other things).
+		@type modenum:		int
+		@param modenum:		the number of the mode you want to switch into 
+							(see comments below)
+		@return:		A boolean set to True if the command ran succesfully.
 		"""
-		self.tty.write(commandstring)
-		response = self.tty.readline()
-		return response[:-2]
+		if modenum < 6 and modenum > -1:# There are 6 possible options
+			#For the LCD-32D59U, the inputs are:
+			#MODE0:	Toggle to the next mode
+			#MODE1:	Standard
+			#MODE2:	Dynamic
+			#MODE3:	Movie
+			#MODE4:	Power Saver
+			#MODE5:	User
+			return self.send_command('AVMD%1d   \r\n' % modenum)
+		else:
+			raise ValueError('AV mode number must be between 0 and 5')
+
+	def query_av_mode(self):
+		"""
+		Return the current AV mode.
+		@return:	An integer storing the current AV mode.
+		"""
+		return int(self.query_state('AVMD?   \r\n'))
+
+	def view_mode(self, modenum):
+		"""
+		Change the widescreen mode.
+		@type modenum:	int
+		@param modenum:	The widescreen mode you want to switch into (see 
+						comments below)
+		@return:		A boolean set to True if the command ran succesfully.
+		"""
+		if modenum < 8 and modenum > -1:#There are 8 possible options
+			#For the LCD-32D59U
+			#MODE0:	Toggle to the next mode
+			#MODE1:	Normal
+			#MODE2: S. Stretch
+			#MODE3: Stretch
+			#MODE4: Zoom
+			#MODE5: Full Screen
+			#MODE6: Dot by Dot
+			#MODE7: Cinema
+			return self.send_command('WIDE%1d   \r\n' % modenum)
+		else:
+			raise ValueError('Widescreen mode number must be between 0 and 7')
+	
+	def query_view_mode(self):
+		"""
+		Return the current widescreen mode.
+		@return:	An integer storing the current widescreen mode.
+		"""
+		return int(self.query_state('WIDE?   \r\n'))
 
 	def send_command(self, commandstring):
 		"""
@@ -207,4 +253,16 @@ class controller:
 		if response == 'OK\r\n':
 			return True
 		else:
-			return False
+
+	def query_state(self, commandstring):
+		"""
+		Internal method for checking the state of some TV parameter.
+		@type commandstring:	string	
+		@param commandstring:	The command to be passed to the TV over RS-232.
+		@return:				The returned value.
+		"""
+		self.tty.write(commandstring)
+		response = self.tty.readline()
+		return response[:-2]
+
+		return False
