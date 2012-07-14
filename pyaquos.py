@@ -71,6 +71,13 @@ class controller:
 		else:
 			raise ValueError('Volume must be between 1 and 99')
 
+	def volume_state(self):
+		"""
+		Query the current volume level of the TV.
+		@return:		An integer storing the current volume level of the TV.
+		"""
+        return int(self.query_state('VOLM??  \r\n'))
+
 	def screen_position(self, horizontal, vertical, clock, phase):
 		"""
 		Change the VGA screen position, clock, and phase (this may be dangerous)
@@ -110,6 +117,16 @@ class controller:
 			return self.send_command('MUTE1   \r\n')
 		else:
 			return self.send_command('MUTE2   \r\n')
+
+	def mute_state(self):
+		"""
+        Query if the TV is muted
+		@return:		A boolean set to True if TV is muted.
+		"""
+        if self.query_state('MUTE?   \r\n') == '1':
+            return True
+        else:
+            return False
 
 	def input_toggle(self):
 		"""
