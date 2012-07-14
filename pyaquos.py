@@ -152,6 +152,7 @@ class controller:
 		"""
 		if number < 9 and number > 0:#There are 8 inputs
 			#For the LC-32D59U, the inputs are:
+			#INPUT0: TV Tuner (use input_tv() to access this)
 			#INPUT1: HDMI1 Top Side HDMI
 			#INPUT2: HDMI2 Bottom Side HDMI
 			#INPUT3: HDMI3 Top Rear HDMI
@@ -163,6 +164,13 @@ class controller:
 			return self.send_command('IAVD%1d   \r\n' % (number))
 		else:
 			raise ValueError('Input must be between 1 and 8')
+
+    def input_state(self):
+        """
+        Return the current input number of the TV.
+        @return:        The integer number corresponding to the current input.
+        """
+        return int(self.query_state('IAVD?   \r\n'))
 
 	def query_state(self, commandstring):
 		"""
