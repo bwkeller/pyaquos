@@ -262,7 +262,37 @@ class controller:
 			return True
 		else:
 			return False
-	
+
+	def sleep_timer(self, time):
+		"""
+		Set the TV's sleep timer.  Unfortunately, there are only a few fixed
+		times that can be used, rather than arbitrary times.
+		@type time:		int
+		@param time:	the number of minutes for the sleep timer (0 is off)
+		@return:		A boolean set to True if the command run successfully.
+		"""
+		#The only acceptable sleep times are 0, 30, 60, 90, and 120 minutes
+		if time == 0:
+			return self.send_command('OFTM0   \r\n')
+		elif time == 30:
+			return self.send_command('OFTM1   \r\n')
+		elif time == 60:
+			return self.send_command('OFTM2   \r\n')
+		elif time == 90:
+			return self.send_command('OFTM3   \r\n')
+		elif time == 120:
+			return self.send_command('OFTM4   \r\n')
+		else:
+			raise ValueError("The sleep time must be 0, 30, 60, 90, or 120 min")
+
+	def query_sleep_timer(self):
+		"""
+		Return the current sleep timer settings.  I don't know if there is
+		any way to determine the amount of time remaining on the timer.
+		@return:		An integer number of minutes the sleep timer is set to.
+		"""
+		return 30*int(self.query_state('OFTM?   \r\n'))
+
 	def send_command(self, commandstring):
 		"""
 		Internal method for sending the commands and checking the return code.
