@@ -32,7 +32,7 @@ class controller:
 		Power cycle the TV.
 		@return:		Boolean set to True if the power() command is disabled.
 		"""
-		if self.query_state('RSPW?   \r\n') == '1':
+		if self.query_state('RSPW?   \r\n')[0] == '1':
 			return True
 		else:
 			return False
@@ -54,7 +54,7 @@ class controller:
 		Power cycle the TV.
 		@return:		A boolean set to True if the TV is currently powered on.
 		"""
-		if self.query_state('POWR?   \r\n') == '1':
+		if self.query_state('POWR?   \r\n')[0] == '1':
 			return True
 		else:
 			return False
@@ -135,7 +135,7 @@ class controller:
         Query if the TV is muted
 		@return:		A boolean set to True if TV is muted.
 		"""
-        if self.query_state('MUTE?   \r\n') == '1':
+        if self.query_state('MUTE?   \r\n')[0] == '1':
             return True
         else:
             return False
@@ -183,6 +183,23 @@ class controller:
         @return:        The integer number corresponding to the current input.
         """
         return int(self.query_state('IAVD?   \r\n'))
+	
+	def cc_toggle(self):
+		"""
+		Toggle on/off the closed captioning.
+		@return:			A boolean set to True if the command ran succesfully
+		"""
+		return self.send_command('CLCP0   \r\n')
+
+	def cc_state(self):
+		"""
+		Return the current state of the closed captioning
+		@return:		A boolean set to True if the closed captioning is enabled.
+		"""
+		if self.query_state('CLCP?   \r\n')[0] == '1':
+			return True
+		else:
+			return False
 
 	def query_state(self, commandstring):
 		"""
