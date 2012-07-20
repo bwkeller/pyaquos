@@ -32,7 +32,7 @@ class controller:
 		Power cycle the TV.
 		@return:		Boolean set to True if the power() command is disabled.
 		"""
-		if self.query_state('RSPW?   \r\n')[0] == '1':
+		if self.query_state('RSPW?	 \r\n')[0] == '1':
 			return True
 		else:
 			return False
@@ -54,7 +54,7 @@ class controller:
 		Power cycle the TV.
 		@return:		A boolean set to True if the TV is currently powered on.
 		"""
-		if self.query_state('POWR?   \r\n')[0] == '1':
+		if self.query_state('POWR?	 \r\n')[0] == '1':
 			return True
 		else:
 			return False
@@ -67,7 +67,7 @@ class controller:
 		@return:		A boolean set to True if the command ran succesfully.
 		"""
 		if level < 100 and level > 0:#The volume can range from 1 to 99
-			return self.send_command('VOLM%02d  \r\n' % level)
+			return self.send_command('VOLM%02d	\r\n' % level)
 		else:
 			raise ValueError('Volume must be between 1 and 99')
 
@@ -76,7 +76,7 @@ class controller:
 		Query the current volume level of the TV.
 		@return:		An integer storing the current volume level of the TV.
 		"""
-        return int(self.query_state('VOLM??  \r\n'))
+		return int(self.query_state('VOLM??  \r\n'))
 
 	def screen_position(self, horizontal, vertical, clock, phase):
 		"""
@@ -106,17 +106,17 @@ class controller:
 		phsreturn = self.send_command('PHSE%03d \r\n' % phase)
 		return hreturn and vreturn and clckreturn and phase
 
-    def screen_state(self):
-        """
-        Return the current VGA screen settings.
-        @return:    (int, int, int, int) of the horizontal offset, vertical 
-        offset, clock frequency and phase.
-        """
-        horizontal = int(self.query_state('HPOS??? \r\n'))
-        vertical = int(self.query_state('VPOS??? \r\n'))
-        clock = int(self.query_state('CLCK??? \r\n'))
-        phase = int(self.query_state('PHSE??? \r\n'))
-        return (horizontal, vertical, clock, phase)
+	def screen_state(self):
+		"""
+		Return the current VGA screen settings.
+		@return:	(int, int, int, int) of the horizontal offset, vertical 
+		offset, clock frequency and phase.
+		"""
+		horizontal = int(self.query_state('HPOS??? \r\n'))
+		vertical = int(self.query_state('VPOS??? \r\n'))
+		clock = int(self.query_state('CLCK??? \r\n'))
+		phase = int(self.query_state('PHSE??? \r\n'))
+		return (horizontal, vertical, clock, phase)
 
 	def mute(self, state):
 		"""
@@ -132,13 +132,13 @@ class controller:
 
 	def mute_state(self):
 		"""
-        Query if the TV is muted
+		Query if the TV is muted
 		@return:		A boolean set to True if TV is muted.
 		"""
-        if self.query_state('MUTE?   \r\n')[0] == '1':
-            return True
-        else:
-            return False
+		if self.query_state('MUTE?	 \r\n')[0] == '1':
+			return True
+		else:
+			return False
 
 	def input_toggle(self):
 		"""
@@ -173,16 +173,16 @@ class controller:
 			#INPUT6: COMP2 Bottom Rear Component
 			#INPUT7: AV Rear Composite
 			#INPUT8: PC IN VGA PC input
-			return self.send_command('IAVD%1d   \r\n' % number)
+			return self.send_command('IAVD%1d	\r\n' % number)
 		else:
 			raise ValueError('Input must be between 1 and 8')
 
-    def input_state(self):
-        """
-        Return the current input number of the TV.
-        @return:        The integer number corresponding to the current input.
-        """
-        return int(self.query_state('IAVD?   \r\n'))
+	def input_state(self):
+		"""
+		Return the current input number of the TV.
+		@return:		The integer number corresponding to the current input.
+		"""
+		return int(self.query_state('IAVD?	 \r\n'))
 	
 	def cc_toggle(self):
 		"""
@@ -196,7 +196,7 @@ class controller:
 		Return the current state of the closed captioning
 		@return:		A boolean set to True if the closed captioning is enabled.
 		"""
-		if self.query_state('CLCP?   \r\n')[0] == '1':
+		if self.query_state('CLCP?	 \r\n')[0] == '1':
 			return True
 		else:
 			return False
@@ -218,7 +218,7 @@ class controller:
 			#MODE3:	Movie
 			#MODE4:	Power Saver
 			#MODE5:	User
-			return self.send_command('AVMD%1d   \r\n' % modenum)
+			return self.send_command('AVMD%1d	\r\n' % modenum)
 		else:
 			raise ValueError('AV mode number must be between 0 and 5')
 
@@ -227,7 +227,7 @@ class controller:
 		Return the current AV mode.
 		@return:	An integer storing the current AV mode.
 		"""
-		return int(self.query_state('AVMD?   \r\n'))
+		return int(self.query_state('AVMD?	 \r\n'))
 
 	def view_mode(self, modenum):
 		"""
@@ -247,7 +247,7 @@ class controller:
 			#MODE5: Full Screen
 			#MODE6: Dot by Dot
 			#MODE7: Cinema
-			return self.send_command('WIDE%1d   \r\n' % modenum)
+			return self.send_command('WIDE%1d	\r\n' % modenum)
 		else:
 			raise ValueError('Widescreen mode number must be between 0 and 7')
 	
@@ -256,7 +256,7 @@ class controller:
 		Return the current widescreen mode.
 		@return:	An integer storing the current widescreen mode.
 		"""
-		return int(self.query_state('WIDE?   \r\n'))
+		return int(self.query_state('WIDE?	 \r\n'))
 
 	def surround(self, state):
 		"""
@@ -275,7 +275,7 @@ class controller:
 		Return the current surround sound setting.
 		@return:		A boolean set to True if surround sound is set to ON.
 		"""
-		if self.query_state('ACSU?   \r\n') == '2':
+		if self.query_state('ACSU?	 \r\n') == '2':
 			return True
 		else:
 			return False
@@ -308,7 +308,83 @@ class controller:
 		any way to determine the amount of time remaining on the timer.
 		@return:		An integer number of minutes the sleep timer is set to.
 		"""
-		return 30*int(self.query_state('OFTM?   \r\n'))
+		return 30*int(self.query_state('OFTM?	\r\n'))
+
+	def analog_channel(self, channel):
+		"""
+		Change the analog tuner channel.
+		@type channel:	int
+		@param channel:	the channel number to switch to
+		@return:		A boolean set to True if the command run successfully.
+		"""
+		if channel < 1 or channel > 135:
+			raise ValueError("The channel must be between 1 and 135")
+		return self.send_command('DCCH%03d \r\n' % channel)
+
+	def query_analog_channel(self):
+		"""
+		Return the current channel setting for the analog tuner.
+		@return:	an integer storing the current channel for the analog channel.
+		"""
+		return int(self.query_state('DCCH??? \r\n'))
+
+	def channel_up(self):
+		"""
+		Increment the channel.
+		@return:		A boolean set to True if the command run successfully.
+		"""
+		return self.send_command('CHUP0   \r\n')
+
+	def channel_down(self):
+		"""
+		Decrement the channel.
+		@return:		A boolean set to True if the command run successfully.
+		"""
+		return self.send_command('CHDW0   \r\n')
+
+	def digital_air_channel(self, channel):
+		"""
+		Change the digital air tuner channel
+		@type channel:	int 
+		@param channel:	The digital air channel 
+		@return:		A boolean set to True if the command run successfully.
+		"""
+		if channel < 100 or channel > 9999:
+			raise ValueError("The channel must be between 100 and 9999")
+		return self.send_command('DA2P%04d\r\n' % channel)
+
+	def query_digital_air_channel(self):
+		"""
+		Return the current digital air channel
+		@return: an integer storing the current digital air tuner value. 
+		"""
+		return int(self.query_state('DA2P????\r\n'))
+	
+#I am unsure how I could query the current digital cable channel, because of
+#the different methods of actually setting the channel.
+	def digital_cable_channel(self, channel):
+		"""
+		Change the digital cable tuner channel
+		@type channel:	int or (int, int)
+		@param channel:	The digital channel (either single digit or (major, minor) channel number)
+		@return:		A boolean set to True if the command run successfully.
+		"""
+		if type(channel) == tuple:
+			if channel[0] < 1 or channel[1] < 0 or channel[0] > 999 or \\
+			channel[1] > 999:
+				return ValueError("Digital Channel Major Number must be
+				between 1 and 999 and Minor Number must be between 0 and 999")
+			major = self.send_command('DC2U%03d \r\n' % channel[0])
+			minor = self.send_command('DC2L%03d \r\n' % channel[1])
+			return minor and major
+		else:
+			if channel < 0 or channel > 16383:
+				return ValueError("Digital channel number must be between 0 and 16383")
+			elif channel < 10000:
+				return self.send_command('DC10%04d\r\n' % channel)
+			else:
+				return self.send_command('DC11%04d\r\n' % channel)
+
 
 	def send_command(self, commandstring):
 		"""
@@ -322,6 +398,7 @@ class controller:
 		if response == 'OK\r\n':
 			return True
 		else:
+			return False
 
 	def query_state(self, commandstring):
 		"""
@@ -333,5 +410,3 @@ class controller:
 		self.tty.write(commandstring)
 		response = self.tty.readline()
 		return response[:-2]
-
-		return False
